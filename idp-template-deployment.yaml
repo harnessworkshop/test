@@ -1,0 +1,115 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: <KIND>
+metadata:
+  name: <YOUR_NAMESPACE>_Three_Tier_Web_App_Blueprint
+  title: <YOUR_NAMESPACE> Three Tier Web App Blueprint
+  description: <DESCRIPTION>
+  tags:
+    - react
+    - node.js
+    - <ADD TAG>
+    - <ADD TAG>
+    - <ADD TAG>
+spec:
+  owner: <ADD_OWNER>
+  type: service
+  parameters:
+    - title: Service Details
+      required:
+        - <ADD_NAMESPACE_PROPERTY_HERE>
+        - github_repo_name
+        - github_repo_description
+        - github_repo_owner
+        - harness_project_name
+        - eks_cluster_name
+        - db_name
+        - db_type
+      properties:
+        namespace: <ADD_NAMESPACE_PROPERTY_HERE>
+        github_repo_name:
+          title: Github Repo Name
+          type: string
+          description: Name of the github repo to deploy
+          pattern: "^[a-z]+(?:[_][a-z]+)*$"
+          maxLength: 20
+          ui:autofocus: true
+          ui:help: "Hint: Words and underscores only"
+        github_repo_description:
+          title: Github Repo Description
+          type: string
+          description: Description of the github repo
+          maxLength: 100
+          ui:autofocus: true
+        github_repo_owner:
+          title: Github Repo Owner
+          type: string
+          description: Email of the github repo owner
+          pattern: "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$"
+          maxLength: 30
+          ui:autofocus: true
+          ui:help: "Hint: Emails only"
+        harness_project_name:
+          title: Harness Project Name
+          type: string
+          description: Name of the new harness project
+          pattern: "^[a-z]+(?:[_][a-z]+)*$"
+          maxLength: 20
+          ui:autofocus: true
+          ui:help: "Hint: Words and underscores only"
+        eks_cluster_name:
+          title: EKS Cluster Name
+          type: string
+          description: Name of the new EKS cluster to deploy
+          pattern: "^[a-z]+(?:[_][a-z]+)*$"
+          maxLength: 20
+          ui:autofocus: true
+          ui:help: "Hint: Words and underscores only"
+        db_name:
+          title: Database Name
+          type: string
+          description: Name of the new database to deploy
+          pattern: "^[a-z]+(?:[_][a-z]+)*$"
+          maxLength: 20
+          ui:autofocus: true
+          ui:help: "Hint: Words and underscores only"
+        db_type:
+          title: Database Type
+          type: string
+          description: Name of the new database to deploy
+          enum:
+            - rds
+            - aurora
+            - dynamoDb
+          default: rds
+        owner:
+          title: Choose an Owner for the Service
+          type: string
+          ui:field: OwnerPicker
+          ui:options:
+            allowedKinds:
+              - Group
+        token:
+          title: Harness Token
+          type: string
+          ui:widget: password
+          ui:field: HarnessAuthToken
+  steps:
+    - id: trigger
+      name: Bootstrapping your new service
+      action: trigger:harness-custom-pipeline
+      input:
+        url: https://app.harness.io/ng/account/IFG41DWvSnaRLOVNB2uesg/module/cd/orgs/training/projects/Viper/pipelines/three_tier_app_onboarding/pipeline-studio?storeType=INLINE
+        inputset:
+          namespace: <ADD_PARAMETER>
+          github_repo_name: ${{ parameters.github_repo_name }}
+          github_repo_description: ${{ parameters.github_repo_description }}
+          github_repo_owner: ${{ parameters.github_repo_owner }}
+          harness_project_name: ${{ parameters.harness_project_name }}
+          eks_cluster_name: ${{ parameters.eks_cluster_name }}
+          db_name: ${{ parameters.db_name }}
+        apikey: ${{ parameters.token }}
+
+  output:
+    links:
+      - title: Pipeline Details
+        url: ${{ steps.trigger.output.PipelineUrl }}

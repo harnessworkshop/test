@@ -1,0 +1,19 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: spradyumn_db
+  description: test1_desc
+  annotations:
+    backstage.io/techdocs-ref: dir:.
+    github.com/project-slug: harnessworkshop/test
+    #harness.io/pipelines: |
+    #  infra provisioning: TBD
+  tags:
+    - spradyumn
+    - db
+spec:
+  type: service
+  owner: saipradyumn_shrivastava@newyorklife.com
+  lifecycle: experimental
+#  dependsOn:
+#    - component:default/yournamehere-service

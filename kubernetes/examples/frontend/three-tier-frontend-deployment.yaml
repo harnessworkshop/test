@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: three-tier-frontend-deployment
+  namespace: hsaab
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: three-tier-frontend-deployment
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: three-tier-frontend-deployment
+    spec:
+      containers:
+      - name: three-tier-frontend
+        image: hsaab/three-tier-app-frontend:1
+        ports:
+        - containerPort: 80
+        imagePullPolicy: "Always"
+        resources:
+          requests:
+            cpu: "200m"
+            memory: "256Mi"
+          limits:
+            cpu: "500m"
+            memory: "512Mi"
